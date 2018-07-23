@@ -1,0 +1,1 @@
+var app=angular.module("MyApp",[]),server="https://www.exact.co.id/SE/";function Post(e,o,t){var n=server+e;setTimeout(function(){$.post(n,o,function(e,o){t(e)}).success("Done").error(function(){})},3e3)}
