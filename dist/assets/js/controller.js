@@ -1,1 +1,0 @@
-app.controller("HelloController",function(o){o.txtname="dodol"});

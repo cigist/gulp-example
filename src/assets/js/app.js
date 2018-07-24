@@ -23,6 +23,3 @@ function Post(service, vdata, result) {
         });
     }, 3000);
 };
-app.controller("HelloController", function ($scope) {
-    $scope.txtname = "dodol";
-});
