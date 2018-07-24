@@ -1,1 +1,5 @@
-#add 'node_modules'
+#ignore node modules
+node_modules/
+
+#ignore lock 
+package-lock.json

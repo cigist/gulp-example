@@ -7,7 +7,8 @@ var gulp = require('gulp'),
     webpack = require('webpack')
     webpackStream = require('webpack-stream')
     webpackConfig = require('./webpack.config.js'),
-    uglify = require('gulp-uglify');
+    uglify = require('gulp-uglify')
+    validator = require('gulp-html');
 
 gulp.task('imagemin', function () {
     var img_src = 'src/images/**/*', img_dist = 'dist/images';
@@ -23,13 +24,19 @@ gulp.task('script', function () {
     gulp.src('src/assets/lib/lib.js')
         .pipe(webpackStream(webpackConfig), webpack)
         .pipe(uglify())
-        .pipe(gulp.dest('./dist/assets/js'));
+        .pipe(gulp.dest('./dist/assets/js'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
 });
 gulp.task('js', function () {
     gulp.src('src/assets/js/*.js')
-        // .pipe(concat('app.js'))
-        .pipe(uglify())
-        .pipe(gulp.dest('./dist/assets/js'));
+        .pipe(concat('app.js'))
+        // .pipe(uglify())
+        .pipe(gulp.dest('./dist/assets/js'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
 });
 gulp.task('sass', function () {
     return gulp.src('./src/assets/sass/**/*.scss')
@@ -40,7 +47,23 @@ gulp.task('sass', function () {
             stream: true
         }));
 });
-gulp.task('serve', ['imagemin', 'sass', 'script','js'], function () {
+gulp.task('pages', function() {
+    return gulp.src('src/pages/*.html')
+    // .pipe(validator())
+    .pipe(gulp.dest('dist/pages/'))
+    .pipe(browserSync.reload({
+        stream: true
+    }));
+});
+gulp.task('html', function() {
+    return gulp.src('src/index.html')
+    // .pipe(validator())
+    .pipe(gulp.dest('dist/'))
+    .pipe(browserSync.reload({
+        stream: true
+    }));
+});
+gulp.task('serve', ['imagemin', 'sass', 'script','js','html','pages'], function () {
     browserSync.init({
         server: {
             baseDir: './dist/'
@@ -60,5 +83,13 @@ gulp.task('serve', ['imagemin', 'sass', 'script','js'], function () {
     // watch for image
     gulp.watch('src/images/*', function () {
         gulp.run('imagemin');
+    });
+    // watch for index
+    gulp.watch('src/index.html', function () {
+        gulp.run('html');
+    });
+    // watch for view
+    gulp.watch('src/pages/*', function () {
+        gulp.run('pages');
     });
 });
